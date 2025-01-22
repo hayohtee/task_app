@@ -1,18 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/features/auth/screens/login_screen.dart';
+import 'package:frontend/features/auth/screens/signup_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -30,27 +29,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Sign Up.",
+                      "Login.",
                       style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 32),
-                    TextFormField(
-                      controller: _nameController,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(hintText: "Name"),
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Name field cannot be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(hintText: "Email"),
@@ -90,25 +75,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: signUpUser,
+                      onPressed: loginUser,
                       child: Text(
-                        "SIGN UP",
+                        "LOGIN",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
                     SizedBox(height: 16),
                     RichText(
                       text: TextSpan(
-                        text: "Already have an account? ",
+                        text: "Don't have an account? ",
                         style: TextTheme.of(context).titleMedium,
                         children: [
                           TextSpan(
-                            text: "Sign In",
+                            text: "Sign Up",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => LoginScreen(),
+                                    builder: (context) => SignUpScreen(),
                                   ),
                                 );
                               },
@@ -127,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void signUpUser() {
+  void loginUser() {
     if (_formKey.currentState!.validate()) {}
   }
 
@@ -135,7 +120,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _nameController.dispose();
     super.dispose();
   }
 }
