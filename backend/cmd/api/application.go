@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"log/slog"
+	"sync"
+	"time"
+)
 
 // config struct holds the configuration settings
 // for the application.
@@ -13,4 +17,12 @@ type config struct {
 		maxIdleConn int
 		maxIdleTime time.Duration
 	}
+}
+
+// application holds the dependencies for the HTTP handlers
+// helpers and middlewares.
+type application struct {
+	config config
+	logger *slog.Logger
+	wg     sync.WaitGroup
 }
