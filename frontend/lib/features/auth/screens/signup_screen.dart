@@ -105,6 +105,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  void signUpUser() {
+    if (_formKey.currentState!.validate()) {
+      
+    }
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
