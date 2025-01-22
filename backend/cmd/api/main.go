@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"flag"
 	"log/slog"
 	"os"
@@ -28,4 +30,25 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConn, "db-max-idle-conn", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max idle time")
 	flag.Parse()
+}
+
+func openDB(cfg config) (*sql.DB, error) {
+	db, err := sql.Open("pgx", cfg.db.dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	db.SetMaxIdleConns(cfg.db.maxIdleConn)
+	db.SetMaxOpenConns(cfg.db.maxOpenConn)
+	db.SetConnMaxIdleTime(cfg.db.maxIdleTime)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, err
+	}
+
+	return db, nil
 }
