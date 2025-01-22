@@ -79,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return "Password field cannot be empty";
                         }
 
-                        if (value.trim().length < 6) {
+                        if (value.trim().length < 7) {
                           return "Password field should be at least 7 characters long";
                         }
 
