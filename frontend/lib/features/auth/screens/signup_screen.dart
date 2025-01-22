@@ -39,6 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _nameController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(hintText: "Name"),
+                      keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -52,6 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(hintText: "Email"),
                       textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         final regex = RegExp(
                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -71,6 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _passwordController,
                       decoration: InputDecoration(hintText: "Password"),
                       textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.visiblePassword,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return "Password field cannot be empty";
