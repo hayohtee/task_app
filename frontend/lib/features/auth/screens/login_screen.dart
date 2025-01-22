@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: "Sign Up",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.of(context).push(
+                                Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => SignUpScreen(),
                                   ),
