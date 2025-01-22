@@ -30,6 +30,24 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConn, "db-max-idle-conn", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max idle time")
 	flag.Parse()
+
+	db, err := openDB(cfg)
+	if err != nil {
+		logger.Error("database:", err.Error())
+		os.Exit(1)
+	}
+	defer db.Close()
+	logger.Info("database connection established")
+
+	app := application{
+		config: cfg,
+		logger: logger,
+	}
+
+	if err := app.serve(); err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 }
 
 func openDB(cfg config) (*sql.DB, error) {
