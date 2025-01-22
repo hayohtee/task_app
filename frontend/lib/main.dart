@@ -14,7 +14,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Task App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        inputDecorationTheme: InputDecorationTheme(
+          contentPadding: EdgeInsets.all(24),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 2,
+            ),
+          ),
+        ),
         useMaterial3: true,
       ),
       home: SignUpScreen(),
