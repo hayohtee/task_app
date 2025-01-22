@@ -79,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: signUpUser,
                 child: Text(
                   "SIGN UP",
                   style: TextStyle(fontSize: 16),
@@ -106,9 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUpUser() {
-    if (_formKey.currentState!.validate()) {
-      
-    }
+    if (_formKey.currentState!.validate()) {}
   }
 
   @override
