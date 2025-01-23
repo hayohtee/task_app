@@ -19,6 +19,7 @@ FROM alpine:latest AS build-release-stage
 WORKDIR /
 
 COPY --from=build-stage /app/api .
+COPY --from=build-stage /app/.env .
 
 EXPOSE 4000
 
