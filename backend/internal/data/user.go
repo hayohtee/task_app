@@ -21,3 +21,11 @@ func ValidateEmail(v *validator.Validator, email string) {
 	v.Check(email != "", "email", "must be provided")
 	v.Check(validator.Matches(email, validator.EmailRX), "email", "must be a valid email address")
 }
+
+func ValidateUser(v *validator.Validator, user User) {
+	ValidateEmail(v, user.Email)
+	ValidatePassword(v, *user.Password.plaintext)
+
+	v.Check(user.Name != "", "name", "must be provided")
+	v.Check(len(user.Name) < 500, "name", "must not be more than 500 bytes long")
+}
