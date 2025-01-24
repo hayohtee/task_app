@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"flag"
+	"fmt"
 	"log/slog"
 	"os"
 	"time"
@@ -34,7 +35,7 @@ func main() {
 
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Error("database:", err.Error())
+		logger.Error(fmt.Sprintf("database: %s", err.Error()))
 		os.Exit(1)
 	}
 	defer db.Close()
