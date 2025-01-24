@@ -3,8 +3,8 @@ package data
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/hayohtee/task_app/internal/validator"
-	uuid "github.com/jackc/pgx/pgtype/ext/gofrs-uuid"
 )
 
 type User struct {
