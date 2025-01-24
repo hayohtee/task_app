@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/hayohtee/task_app/internal/data"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
 )
@@ -44,6 +45,7 @@ func main() {
 	app := application{
 		config: cfg,
 		logger: logger,
+		model:  data.NewModel(db),
 	}
 
 	if err := app.serve(); err != nil {
