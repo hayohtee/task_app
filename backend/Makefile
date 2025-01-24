@@ -30,3 +30,8 @@ migrate-drop:
 compose-up:
 	@echo "Running docker compose"
 	@docker-compose up --build
+
+.PHONY: run
+run:
+	@echo "Running the backend locally"
+	@go run ./cmd/api -port=4001 -db-dsn=${LOCAL_DATABASE_DSN}
