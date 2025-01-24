@@ -9,6 +9,8 @@ import (
 )
 
 var (
+	// ErrDuplicateEmail is an error that indicates that the email address provided
+	// is already in use by another user.
 	ErrDuplicateEmail = errors.New("duplicate email")
 )
 
