@@ -12,6 +12,8 @@ var (
 	ErrDuplicateEmail = errors.New("duplicate email")
 )
 
+// UserModel represents a model for interacting with the users table in the database.
+// It holds a reference to the database connection pool.
 type UserModel struct {
 	DB *sql.DB
 }
