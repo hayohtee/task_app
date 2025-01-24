@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"sync"
 	"time"
+
+	"github.com/hayohtee/task_app/internal/data"
 )
 
 // config struct holds the configuration settings
@@ -24,5 +26,6 @@ type config struct {
 type application struct {
 	config config
 	logger *slog.Logger
+	model  data.Model
 	wg     sync.WaitGroup
 }

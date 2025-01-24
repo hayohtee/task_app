@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"flag"
+	"fmt"
 	"log/slog"
 	"os"
 	"time"
 
+	"github.com/hayohtee/task_app/internal/data"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
 )
@@ -34,7 +36,7 @@ func main() {
 
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Error("database:", err.Error())
+		logger.Error(fmt.Sprintf("database: %s", err.Error()))
 		os.Exit(1)
 	}
 	defer db.Close()
@@ -43,6 +45,7 @@ func main() {
 	app := application{
 		config: cfg,
 		logger: logger,
+		model:  data.NewModel(db),
 	}
 
 	if err := app.serve(); err != nil {
