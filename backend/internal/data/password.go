@@ -3,6 +3,7 @@ package data
 import (
 	"errors"
 
+	"github.com/hayohtee/task_app/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -45,4 +46,10 @@ func (p *password) Matches(plaintextPassword string) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+func ValidatePassword(v *validator.Validator, password string) {
+	v.Check(password != "", "password", "must be provided")
+	v.Check(len(password) >= 8, "password", "must be at least 8 bytes")
+	v.Check(len(password) <= 72, "password", "must not be more than 72 bytes long")
 }
