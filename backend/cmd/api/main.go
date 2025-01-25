@@ -47,10 +47,18 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection established")
 
+	redisClient, err := openRedis(cfg)
+	if err != nil {
+		logger.Error(fmt.Sprintf("redis: %s", err.Error()))
+		os.Exit(1)
+	}
+	defer redisClient.Close()
+	logger.Info("redis connection established")
+
 	app := application{
 		config: cfg,
 		logger: logger,
-		model:  data.NewModel(db),
+		model:  data.NewModel(db, redisClient),
 	}
 
 	if err := app.serve(); err != nil {
