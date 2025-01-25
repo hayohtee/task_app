@@ -87,7 +87,7 @@ func (app *application) requireAuthentication(next http.HandlerFunc) http.Handle
 		}
 
 		// Attempt to retrieve a token from Redis using the plain text token as the key
-		token, err := app.model.Tokens.Get(tokenPlainText)
+		token, err := app.model.Tokens.Get(data.ScopeAccess, tokenPlainText)
 		if err != nil {
 			switch {
 			case errors.Is(err, data.ErrRecordNotFound):
