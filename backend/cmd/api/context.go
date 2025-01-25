@@ -16,17 +16,18 @@ const (
 	userContextKey = contextKey("user")
 )
 
-// contextSetUserID adds the user ID from the provided token to the request context.
-// This allows the user ID to be accessed throughout the request lifecycle.
+// contextSetUserID sets the user ID in the request context using the provided key and token.
+// It returns a new request with the updated context.
 //
 // Parameters:
 //
-//	r - The original HTTP request.
-//	token - The token containing the user ID to be added to the context.
+//	r    - The original HTTP request.
+//	key  - The context key to use for storing the user ID.
+//	token - The token containing the user ID.
 //
 // Returns:
 //
-//	A new HTTP request with the user ID added to the context.
+//	*http.Request - A new HTTP request with the user ID set in the context.
 func (app *application) contextSetUserID(r *http.Request, key contextKey, token data.Token) *http.Request {
 	ctx := context.WithValue(r.Context(), key, token.UserID)
 	return r.WithContext(ctx)
