@@ -1,6 +1,8 @@
 package data
 
 import (
+	"crypto/rand"
+	"encoding/base32"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,4 +34,35 @@ type Token struct {
 	UserID    uuid.UUID  `redis:"user_id"`
 	Expiry    time.Time  `redis:"expiry"`
 	Scope     tokenScope `redis:"scope"`
+}
+
+// generateToken generates a new token for a given user ID with a specified time-to-live (TTL) and scope.
+// It returns the generated Token and an error, if any.
+//
+// Parameters:
+//   - userID: The UUID of the user for whom the token is being generated.
+//   - ttl: The duration for which the token is valid.
+//   - scope: The scope of the token.
+//
+// Returns:
+//   - Token: The generated token containing the user ID, expiry time, scope, and plain text representation.
+//   - error: An error if the token generation fails.
+func generateToken(userID uuid.UUID, ttl time.Duration, scope tokenScope) (Token, error) {
+	token := Token{
+		UserID: userID,
+		Expiry:     time.Now().Add(ttl),
+		Scope:      scope,
+	}
+
+	// Generate a random 16 byte array
+	randomBytes := make([]byte, 16)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return token, err
+	}
+
+	// Encode the random bytes to a base32 string
+	token.PlainText = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
+
+	return token, nil
 }
