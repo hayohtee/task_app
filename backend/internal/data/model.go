@@ -3,6 +3,8 @@ package data
 import (
 	"database/sql"
 	"errors"
+
+	"github.com/redis/go-redis/v9"
 )
 
 var (
@@ -18,7 +20,8 @@ var (
 // Model represents the main data structure that holds various models used in the application.
 // It currently contains a single field, Users, which is of type UserModel.
 type Model struct {
-	Users UserModel
+	Users  UserModel
+	Tokens TokenModel
 }
 
 // NewModel initializes a new Model instance with the provided database connection.
@@ -29,8 +32,9 @@ type Model struct {
 // Returns:
 //
 //	A Model instance with the Users field initialized.
-func NewModel(db *sql.DB) Model {
+func NewModel(db *sql.DB, redisClient *redis.Client) Model {
 	return Model{
-		Users: UserModel{DB: db},
+		Users:  UserModel{DB: db},
+		Tokens: TokenModel{client: redisClient},
 	}
 }
