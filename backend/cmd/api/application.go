@@ -19,6 +19,11 @@ type config struct {
 		maxIdleConn int
 		maxIdleTime time.Duration
 	}
+	redis struct {
+		addr     string
+		password string
+		db       int
+	}
 }
 
 // application holds the dependencies for the HTTP handlers
