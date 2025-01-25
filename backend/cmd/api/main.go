@@ -12,6 +12,7 @@ import (
 	"github.com/hayohtee/task_app/internal/data"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -77,4 +78,21 @@ func openDB(cfg config) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func openRedis(cfg config) (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     cfg.redis.addr,
+		Password: cfg.redis.password,
+		DB:       cfg.redis.db,
+	})
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if _, err := client.Ping(ctx).Result(); err != nil {
+		return nil, err
+	}
+
+	return client, nil
 }
