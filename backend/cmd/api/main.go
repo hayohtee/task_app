@@ -32,6 +32,10 @@ func main() {
 	flag.IntVar(&cfg.db.maxOpenConn, "db-max-open-conn", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConn, "db-max-idle-conn", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max idle time")
+
+	flag.StringVar(&cfg.redis.addr, "redis-addr", os.Getenv("REDIS_ADDRESS"), "Redis server address")
+	flag.StringVar(&cfg.redis.password, "redis-password", os.Getenv("REDIS_PASSWORD"), "Redis server password")
+	flag.IntVar(&cfg.redis.db, "redis-db", 0, "Redis server database")
 	flag.Parse()
 
 	db, err := openDB(cfg)
