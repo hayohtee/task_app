@@ -12,6 +12,7 @@ import (
 	"github.com/hayohtee/task_app/internal/data"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -32,6 +33,10 @@ func main() {
 	flag.IntVar(&cfg.db.maxOpenConn, "db-max-open-conn", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConn, "db-max-idle-conn", 25, "PostgreSQL max idle connections")
 	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max idle time")
+
+	flag.StringVar(&cfg.redis.addr, "redis-addr", os.Getenv("REDIS_ADDRESS"), "Redis server address")
+	flag.StringVar(&cfg.redis.password, "redis-password", os.Getenv("REDIS_PASSWORD"), "Redis server password")
+	flag.IntVar(&cfg.redis.db, "redis-db", 0, "Redis server database")
 	flag.Parse()
 
 	db, err := openDB(cfg)
@@ -42,10 +47,18 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection established")
 
+	redisClient, err := openRedis(cfg)
+	if err != nil {
+		logger.Error(fmt.Sprintf("redis: %s", err.Error()))
+		os.Exit(1)
+	}
+	defer redisClient.Close()
+	logger.Info("redis connection established")
+
 	app := application{
 		config: cfg,
 		logger: logger,
-		model:  data.NewModel(db),
+		model:  data.NewModel(db, redisClient),
 	}
 
 	if err := app.serve(); err != nil {
@@ -73,4 +86,21 @@ func openDB(cfg config) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func openRedis(cfg config) (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     cfg.redis.addr,
+		Password: cfg.redis.password,
+		DB:       cfg.redis.db,
+	})
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if _, err := client.Ping(ctx).Result(); err != nil {
+		return nil, err
+	}
+
+	return client, nil
 }
