@@ -3,9 +3,15 @@ package main
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/hayohtee/task_app/internal/data"
 	"github.com/hayohtee/task_app/internal/validator"
+)
+
+const (
+	accessTokenDuration  = 2 * time.Hour
+	refreshTokenDuration = 24 * time.Hour * 7
 )
 
 func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
