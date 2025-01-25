@@ -46,12 +46,12 @@ func (t TokenModel) insert(token Token) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err := t.client.HSet(ctx, fmt.Sprintf("%s:%s", token.Scope, token.UserID), token).Err()
+	err := t.client.HSet(ctx, fmt.Sprintf("%s:%s", token.Scope, token.PlainText), token).Err()
 	if err != nil {
 		return fmt.Errorf("failed to insert the token into redis: %w", err)
 	}
 
-	err = t.client.ExpireAt(ctx, token.PlainText, token.Expiry).Err()
+	err = t.client.ExpireAt(ctx, fmt.Sprintf("%s:%s", token.Scope, token.PlainText), token.Expiry).Err()
 	if err != nil {
 		return fmt.Errorf("failed to set expiry for token in redis: %w", err)
 	}
@@ -69,13 +69,13 @@ func (t TokenModel) insert(token Token) error {
 // Returns:
 //   - Token: The retrieved token.
 //   - error: An error if the token is not found or if there is an issue with the Redis operation.
-func (t TokenModel) Get(userID uuid.UUID, scope tokenScope) (Token, error) {
+func (t TokenModel) Get(scope tokenScope, tokenPlainText string) (Token, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var token Token
 
-	value := t.client.HGetAll(ctx, fmt.Sprintf("%s:%s", scope, userID))
+	value := t.client.HGetAll(ctx, fmt.Sprintf("%s:%s", scope, tokenPlainText))
 	if err := value.Err(); err != nil {
 		return token, err
 	}
