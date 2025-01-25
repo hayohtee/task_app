@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hayohtee/task_app/internal/validator"
 )
 
 // tokenScope represents the scope of a token as a string type.
@@ -65,4 +66,14 @@ func generateToken(userID uuid.UUID, ttl time.Duration, scope tokenScope) (Token
 	token.PlainText = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
 
 	return token, nil
+}
+
+// ValidateTokenPlainText checks if the provided tokenPlainText meets the required criteria.
+// It validates that the tokenPlainText is not empty and has a length of exactly 26 bytes.
+// Parameters:
+//   - v: A pointer to a validator.Validator instance used for validation.
+//   - tokenPlainText: The token string to be validated.
+func ValidateTokenPlainText(v *validator.Validator, key, tokenPlainText string) {
+	v.Check(tokenPlainText != "", key, "must be provided")
+	v.Check(len(tokenPlainText) == 26, key, "must be 26 bytes long")
 }
