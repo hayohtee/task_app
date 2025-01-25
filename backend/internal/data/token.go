@@ -9,6 +9,16 @@ import (
 // tokenScope represents the scope of a token as a string type.
 type tokenScope string
 
+// MarshalBinary implements the encoding.BinaryMarshaler interface for tokenScope.
+// It converts the tokenScope to a byte slice for binary serialization.
+//
+// Returns:
+//   - []byte: The byte slice representation of the tokenScope.
+//   - error: Always returns nil as this operation cannot fail.
+func (t tokenScope) MarshalBinary() ([]byte, error) {
+	return []byte(t), nil
+}
+
 const (
 	ScopeAccess  = tokenScope("access")
 	ScopeRefresh = tokenScope("refresh")
