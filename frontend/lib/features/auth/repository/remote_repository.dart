@@ -8,7 +8,7 @@ import 'package:frontend/models/token_model.dart';
 import 'package:frontend/models/user_model.dart';
 
 class RemoteRepository {
-  Future<AuthResponse> login({
+  Future<AuthResponse> signUp({
     required String name,
     required String email,
     required String password,
@@ -17,6 +17,11 @@ class RemoteRepository {
       final response = await http.post(
         Uri.parse("${Constants.apiURI}/auth/register"),
         headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": name,
+          "email": email,
+          "password": password,
+        }),
       );
 
       if (response.statusCode != 201) {
@@ -28,7 +33,7 @@ class RemoteRepository {
     }
   }
 
-  Future<void> signUp({
+  Future<void> login({
     required String email,
     required String password,
   }) async {}
