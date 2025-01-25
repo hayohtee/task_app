@@ -23,13 +23,27 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - database
+      - cache
     networks:
       - taskapp_network
     ports:
       - 4000:4000
 
+  cache:
+    image: redis:8.0-M03-alpine
+    restart: always
+    ports: 
+      - "6379:6379"
+    volumes:
+      - redis_data:/root/redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PORT: 6379
+      REDIS_DATABASE: ${REDIS_DATABASE}
+
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   taskapp_network:
