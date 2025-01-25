@@ -3,9 +3,15 @@ package main
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/hayohtee/task_app/internal/data"
 	"github.com/hayohtee/task_app/internal/validator"
+)
+
+const (
+	accessTokenDuration  = 2 * time.Hour
+	refreshTokenDuration = 24 * time.Hour * 7
 )
 
 func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +53,29 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	if err := app.writeJSON(w, http.StatusCreated, envelope{"user": user}, nil); err != nil {
+	// Generate an access token for the user
+	accessToken, err := app.model.Tokens.New(user.ID, accessTokenDuration, data.ScopeAccess)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	// Generate a refresh token for the user
+	refreshToken, err := app.model.Tokens.New(user.ID, refreshTokenDuration, data.ScopeRefresh)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	response := envelope{
+		"tokens": map[string]string{
+			"access_token":  accessToken.PlainText,
+			"refresh_token": refreshToken.PlainText,
+		},
+		"user": user,
+	}
+
+	if err := app.writeJSON(w, http.StatusCreated, response, nil); err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
 }
@@ -93,7 +121,29 @@ func (app *application) loginUserHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := app.writeJSON(w, http.StatusOK, envelope{"user": user}, nil); err != nil {
+	// Generate an access token for the user
+	accessToken, err := app.model.Tokens.New(user.ID, accessTokenDuration, data.ScopeAccess)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	// Generate a refresh token for the user
+	refreshToken, err := app.model.Tokens.New(user.ID, refreshTokenDuration, data.ScopeRefresh)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	response := envelope{
+		"tokens": map[string]string{
+			"access_token":  accessToken.PlainText,
+			"refresh_token": refreshToken.PlainText,
+		},
+		"user": user,
+	}
+
+	if err := app.writeJSON(w, http.StatusOK, response, nil); err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
 }

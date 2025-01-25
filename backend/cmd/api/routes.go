@@ -8,5 +8,5 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("POST /v1/auth/register", app.registerUserHandler)
 	mux.HandleFunc("POST /v1/auth/login", app.loginUserHandler)
 
-	return mux
+	return app.recoverPanic(mux)
 }
