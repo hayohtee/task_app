@@ -9,6 +9,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// TokenModel represents a model for handling tokens using a Redis client.
+// It provides methods to interact with the Redis database for token-related operations.
 type TokenModel struct {
 	client *redis.Client
 }
@@ -55,4 +57,41 @@ func (t TokenModel) insert(token Token) error {
 	}
 
 	return nil
+}
+
+// Get retrieves a Token from the redis cache using the provided plain text token.
+// It returns the Token and an error, if any occurred during the retrieval process.
+// If the token is not found, it returns ErrRecordNotFound.
+//
+// Parameters:
+//   - tokenPlainText: The plain text representation of the token to be retrieved.
+//
+// Returns:
+//   - Token: The retrieved token.
+//   - error: An error if any occurred during the retrieval process, or ErrRecordNotFound if the token is not found.
+func (t TokenModel) Get(tokenPlainText string) (Token, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var token Token
+
+	value := t.client.HGetAll(ctx, tokenPlainText)
+	if err := value.Err(); err != nil {
+		return token, err
+	}
+
+	results, err := value.Result()
+	if err != nil {
+		return token, err
+	}
+
+	if len(results) == 0 {
+		return token, ErrRecordNotFound
+	}
+
+	if err := value.Scan(&token); err != nil {
+		return token, err
+	}
+
+	return token, nil
 }
