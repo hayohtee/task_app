@@ -74,7 +74,7 @@ func (app *application) editConflictResponse(w http.ResponseWriter, r *http.Requ
 }
 
 func (app *application) invalidCredentialsResponse(w http.ResponseWriter, r *http.Request) {
-	message := "invalid authentication credentials"
+	message := "the email and password combination does not match any account."
 	app.errorResponse(w, r, http.StatusUnauthorized, message)
 }
 
