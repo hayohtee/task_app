@@ -46,7 +46,7 @@ func (t TokenModel) insert(token Token) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err := t.client.HSet(ctx, token.PlainText, token).Err()
+	err := t.client.HSet(ctx, fmt.Sprintf("%s:%s", token.Scope, token.UserID), token).Err()
 	if err != nil {
 		return fmt.Errorf("failed to insert the token into redis: %w", err)
 	}
@@ -59,23 +59,23 @@ func (t TokenModel) insert(token Token) error {
 	return nil
 }
 
-// Get retrieves a Token from the redis cache using the provided plain text token.
-// It returns the Token and an error, if any occurred during the retrieval process.
-// If the token is not found, it returns ErrRecordNotFound.
+// Get retrieves a token for a given user ID and scope from the Redis store.
+// It returns the token if found, or an error if the token is not found or if there is an issue with the Redis operation.
 //
 // Parameters:
-//   - tokenPlainText: The plain text representation of the token to be retrieved.
+//   - userID: The UUID of the user for whom the token is being retrieved.
+//   - scope: The scope of the token to be retrieved.
 //
 // Returns:
 //   - Token: The retrieved token.
-//   - error: An error if any occurred during the retrieval process, or ErrRecordNotFound if the token is not found.
-func (t TokenModel) Get(tokenPlainText string) (Token, error) {
+//   - error: An error if the token is not found or if there is an issue with the Redis operation.
+func (t TokenModel) Get(userID uuid.UUID, scope tokenScope) (Token, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var token Token
 
-	value := t.client.HGetAll(ctx, tokenPlainText)
+	value := t.client.HGetAll(ctx, fmt.Sprintf("%s:%s", scope, userID))
 	if err := value.Err(); err != nil {
 		return token, err
 	}
