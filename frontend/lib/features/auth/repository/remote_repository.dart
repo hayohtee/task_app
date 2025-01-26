@@ -8,6 +8,8 @@ import 'package:frontend/models/token_model.dart';
 import 'package:frontend/models/user_model.dart';
 
 part 'remote_response.dart';
+part 'remote_request.dart';
+
 class RemoteRepository {
   Future<RemoteResponse> signUp({
     required String name,
