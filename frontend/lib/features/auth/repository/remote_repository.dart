@@ -7,8 +7,9 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/models/token_model.dart';
 import 'package:frontend/models/user_model.dart';
 
+part 'remote_response.dart';
 class RemoteRepository {
-  Future<AuthResponse> signUp({
+  Future<RemoteResponse> signUp({
     required String name,
     required String email,
     required String password,

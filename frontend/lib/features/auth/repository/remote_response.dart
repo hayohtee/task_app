@@ -1,8 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:frontend/models/token_model.dart';
-import 'package:frontend/models/user_model.dart';
+part of "remote_repository.dart";
 
 sealed class RemoteResponse {}
 
