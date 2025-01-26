@@ -36,8 +36,8 @@ class FailedValidationError extends RemoteResponse {
   }
 }
 
-class CreatedResponse extends RemoteResponse {
-  CreatedResponse({required this.tokens, required this.user});
+class UserCreated extends RemoteResponse {
+  UserCreated({required this.tokens, required this.user});
 
   final TokenModel tokens;
   final UserModel user;
@@ -49,8 +49,8 @@ class CreatedResponse extends RemoteResponse {
     };
   }
 
-  factory CreatedResponse.fromMap(Map<String, dynamic> map) {
-    return CreatedResponse(
+  factory UserCreated.fromMap(Map<String, dynamic> map) {
+    return UserCreated(
       tokens: TokenModel.fromMap(map['tokens'] as Map<String, dynamic>),
       user: UserModel.fromMap(map['user'] as Map<String, dynamic>),
     );
@@ -58,7 +58,7 @@ class CreatedResponse extends RemoteResponse {
 
   String toJson() => json.encode(toMap());
 
-  factory CreatedResponse.fromJson(String source) {
-    return CreatedResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserCreated.fromJson(String source) {
+    return UserCreated.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
