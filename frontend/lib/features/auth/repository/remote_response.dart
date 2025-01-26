@@ -2,37 +2,26 @@ part of "remote_repository.dart";
 
 sealed class RemoteResponse {}
 
-class FailedValidationError extends RemoteResponse {
-  FailedValidationError({
-    required this.email,
-    required this.name,
-    required this.password,
-  });
-
-  final String name;
-  final String email;
-  final String password;
+class SignUpFailedValidationError extends RemoteResponse {
+  SignUpFailedValidationError({required this.error});
+  final SignUpValidationMessage error;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'name': name,
-      'email': email,
-      'password': password,
+      'error': error.toMap(),
     };
   }
 
-  factory FailedValidationError.fromMap(Map<String, dynamic> map) {
-    return FailedValidationError(
-      name: map['name'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
+  factory SignUpFailedValidationError.fromMap(Map<String, dynamic> map) {
+    return SignUpFailedValidationError(
+      error: SignUpValidationMessage.fromMap(map['error'] as Map<String, dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory FailedValidationError.fromJson(String source) {
-    return FailedValidationError.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SignUpFailedValidationError.fromJson(String source) {
+    return SignUpFailedValidationError.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
 
