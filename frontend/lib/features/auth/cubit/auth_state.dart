@@ -12,6 +12,16 @@ final class AuthError extends AuthState {
   final String error;
 }
 
-final class AuthSignedIn extends AuthState {
+final class AuthSuccess extends AuthState {}
 
+final class AuthFailedValidation extends AuthState {
+  AuthFailedValidation({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
+
+  final String name;
+  final String email;
+  final String password;
 }
