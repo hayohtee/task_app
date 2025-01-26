@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/screens/login_screen.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -31,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     content: Text(state.error),
                   ),
                 );
-              } else if (state is AuthSignedIn) {
+              } else if (state is AuthSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Account created! Login Now!"),
@@ -115,10 +116,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 32),
                         ElevatedButton(
                           onPressed: signUpUser,
-                          child: Text(
-                            "SIGN UP",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          child: (state is AuthLoading)
+                              ? LoadingIndicator(
+                                  indicatorType: Indicator.ballPulse,
+                                  colors: [Colors.white],
+                                  strokeWidth: 2,
+                                  backgroundColor: Colors.black,
+                                  pathBackgroundColor: Colors.black,
+                                )
+                              : Text(
+                                  "SIGN UP",
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                         SizedBox(height: 16),
                         RichText(
