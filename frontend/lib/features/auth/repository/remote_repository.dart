@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:frontend/core/constants/constants.dart';
@@ -27,11 +27,16 @@ class RemoteRepository {
         }),
       );
 
-      if (response.statusCode != 201) {
-        throw jsonDecode(response.body)["error"];
+      switch (response.statusCode) {
+        case 201:
+          return UserCreated.fromJson(response.body);
+        case 422:
+          return SignUpFailedValidationError.fromJson(response.body);
+        default:
+          return Error.fromJson(response.body);
       }
-      return AuthResponse.fromJson(response.body);
     } catch (e) {
+      debugPrint(e.toString());
       throw e.toString();
     }
   }
