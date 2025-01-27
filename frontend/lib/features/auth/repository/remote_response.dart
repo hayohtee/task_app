@@ -83,9 +83,9 @@ class SignUpValidationMessage {
     required this.password,
   });
 
-  final String name;
-  final String email;
-  final String password;
+  final String? name;
+  final String? email;
+  final String? password;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -97,9 +97,9 @@ class SignUpValidationMessage {
 
   factory SignUpValidationMessage.fromMap(Map<String, dynamic> map) {
     return SignUpValidationMessage(
-      name: map['name'] as String? ?? "",
-      email: map['email'] as String? ?? "",
-      password: map['password'] as String? ?? "",
+      name: map['name'] != null ? map['name'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
+      password: map['password'] != null ? map['password'] as String : null,
     );
   }
 
