@@ -9,7 +9,7 @@ final class AuthInitial extends AuthState {}
 final class AuthLoading extends AuthState {}
 
 final class AuthError extends AuthState {
-  AuthError(this.error);
+  const AuthError(this.error);
 
   final String error;
 }
