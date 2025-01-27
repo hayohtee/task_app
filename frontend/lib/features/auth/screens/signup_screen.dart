@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/screens/login_screen.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -16,6 +17,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _obscureText = true;
+
+  String? _emailError;
+  String? _passwordError;
+  String? _nameError;
 
   @override
   Widget build(BuildContext context) {
@@ -25,26 +31,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.all(16.0),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-              if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.error),
-                  ),
-                );
-              } else if (state is AuthSignedIn) {
+              if (state is AuthSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Account created! Login Now!"),
                   ),
                 );
+              } else if (state is AuthSignUpFailedValidation) {
+                setState(() {
+                  _emailError = state.email;
+                  _passwordError = state.password;
+                  _nameError = state.name;
+                });
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                  ),
+                );
               }
             },
             builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
               return Form(
                 key: _formKey,
                 child: Center(
@@ -64,7 +71,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: _nameController,
                           cursorColor: Colors.black,
-                          decoration: InputDecoration(hintText: "Name"),
+                          decoration: InputDecoration(
+                            hintText: "Name",
+                            errorText: _nameError,
+                          ),
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
@@ -77,7 +87,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 16),
                         TextFormField(
                           controller: _emailController,
-                          decoration: InputDecoration(hintText: "Email"),
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            errorText: _emailError,
+                          ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
@@ -97,8 +110,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 16),
                         TextFormField(
                           controller: _passwordController,
-                          decoration: InputDecoration(hintText: "Password"),
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              icon: Icon(
+                                _obscureText ? Icons.visibility : Icons.visibility_off,
+                              ),
+                            ),
+                            errorText: _passwordError,
+                          ),
                           textInputAction: TextInputAction.done,
+                          obscureText: _obscureText,
                           keyboardType: TextInputType.visiblePassword,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -115,10 +142,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 32),
                         ElevatedButton(
                           onPressed: signUpUser,
-                          child: Text(
-                            "SIGN UP",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          child: (state is AuthLoading)
+                              ? SizedBox(
+                                  height: 50,
+                                  width: double.maxFinite,
+                                  child: LoadingIndicator(
+                                    indicatorType: Indicator.ballPulse,
+                                    colors: [Colors.white],
+                                    strokeWidth: 2,
+                                    backgroundColor: Colors.black,
+                                    pathBackgroundColor: Colors.black,
+                                  ),
+                                )
+                              : Text(
+                                  "SIGN UP",
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                         SizedBox(height: 16),
                         RichText(
