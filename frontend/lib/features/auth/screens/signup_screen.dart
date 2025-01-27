@@ -18,6 +18,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
+  
+  String? _emailError;
+  String? _passwordError;
+  String? _nameError;
 
   @override
   Widget build(BuildContext context) {
