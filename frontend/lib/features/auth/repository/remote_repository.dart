@@ -37,7 +37,7 @@ class RemoteRepository {
       }
     } catch (e) {
       debugPrint(e.toString());
-      throw e.toString();
+      return Error(error: e.toString());
     }
   }
 
