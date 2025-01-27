@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +42,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               }
             },
             builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
               return Form(
                 key: _formKey,
                 child: Center(
@@ -98,8 +94,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 16),
                         TextFormField(
                           controller: _passwordController,
-                          decoration: InputDecoration(hintText: "Password"),
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              icon: Icon(
+                                _obscureText ? Icons.visibility : Icons.visibility_off,
+                              ),
+                            ),
+                          ),
                           textInputAction: TextInputAction.done,
+                          obscureText: _obscureText,
                           keyboardType: TextInputType.visiblePassword,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -117,12 +126,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ElevatedButton(
                           onPressed: signUpUser,
                           child: (state is AuthLoading)
-                              ? LoadingIndicator(
-                                  indicatorType: Indicator.ballPulse,
-                                  colors: [Colors.white],
-                                  strokeWidth: 2,
-                                  backgroundColor: Colors.black,
-                                  pathBackgroundColor: Colors.black,
+                              ? SizedBox(
+                                  height: 50,
+                                  width: double.maxFinite,
+                                  child: LoadingIndicator(
+                                    indicatorType: Indicator.ballPulse,
+                                    colors: [Colors.white],
+                                    strokeWidth: 2,
+                                    backgroundColor: Colors.black,
+                                    pathBackgroundColor: Colors.black,
+                                  ),
                                 )
                               : Text(
                                   "SIGN UP",
