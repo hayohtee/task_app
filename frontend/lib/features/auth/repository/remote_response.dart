@@ -97,9 +97,9 @@ class SignUpValidationMessage {
 
   factory SignUpValidationMessage.fromMap(Map<String, dynamic> map) {
     return SignUpValidationMessage(
-      name: map['name'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
+      name: map['name'] as String? ?? "",
+      email: map['email'] as String? ?? "",
+      password: map['password'] as String? ?? "",
     );
   }
 
