@@ -43,6 +43,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _passwordError = state.password;
                   _nameError = state.name;
                 });
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                  ),
+                );
               }
             },
             builder: (context, state) {
