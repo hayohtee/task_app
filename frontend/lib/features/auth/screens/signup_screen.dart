@@ -18,7 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  
+
   String? _emailError;
   String? _passwordError;
   String? _nameError;
@@ -31,18 +31,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.all(16.0),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-              if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.error),
-                  ),
-                );
-              } else if (state is AuthSuccess) {
+              if (state is AuthSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Account created! Login Now!"),
                   ),
                 );
+              } else if (state is AuthSignUpFailedValidation) {
+                setState(() {
+                  _emailError = state.email;
+                  _passwordError = state.password;
+                  _nameError = state.name;
+                });
               }
             },
             builder: (context, state) {
@@ -65,7 +65,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextFormField(
                           controller: _nameController,
                           cursorColor: Colors.black,
-                          decoration: InputDecoration(hintText: "Name"),
+                          decoration: InputDecoration(
+                            hintText: "Name",
+                            errorText: _nameError,
+                          ),
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
@@ -78,7 +81,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 16),
                         TextFormField(
                           controller: _emailController,
-                          decoration: InputDecoration(hintText: "Email"),
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            errorText: _emailError,
+                          ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
@@ -110,6 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 _obscureText ? Icons.visibility : Icons.visibility_off,
                               ),
                             ),
+                            errorText: _passwordError,
                           ),
                           textInputAction: TextInputAction.done,
                           obscureText: _obscureText,
