@@ -62,7 +62,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 16),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(hintText: "Password"),
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                            _obscureText ? Icons.visibility : Icons.visibility_off,
+                          ),
+                        ),
+                      ),
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.visiblePassword,
                       validator: (value) {
