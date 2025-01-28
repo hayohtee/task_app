@@ -140,11 +140,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                         ),
                         SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: signUpUser,
-                          child: (state is AuthLoading)
-                              ? SizedBox(
-                                  height: 50,
+                        (state is AuthLoading)
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  height: 60,
                                   width: double.maxFinite,
                                   child: LoadingIndicator(
                                     indicatorType: Indicator.ballPulse,
@@ -153,12 +153,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     backgroundColor: Colors.black,
                                     pathBackgroundColor: Colors.black,
                                   ),
-                                )
-                              : Text(
+                                ),
+                              )
+                            : ElevatedButton(
+                                onPressed: signUpUser,
+                                child: Text(
                                   "SIGN UP",
                                   style: TextStyle(fontSize: 16),
                                 ),
-                        ),
+                              ),
                         SizedBox(height: 16),
                         RichText(
                           text: TextSpan(
