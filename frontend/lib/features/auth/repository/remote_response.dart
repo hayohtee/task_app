@@ -118,3 +118,19 @@ class Error extends RemoteResponse {
     return Error.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
+
+class EmailNotFound extends RemoteResponse {
+  const EmailNotFound({required this.message});
+
+  final String message;
+
+  factory EmailNotFound.fromMap(Map<String, dynamic> map) {
+    return EmailNotFound(
+      message: map['error']['message'] as String,
+    );
+  }
+
+  factory EmailNotFound.fromJson(String source) {
+    return EmailNotFound.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
