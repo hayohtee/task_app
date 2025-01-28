@@ -27,3 +27,13 @@ final class AuthSignUpFailedValidation extends AuthState {
   final String? email;
   final String? password;
 }
+
+final class AuthLoginFailedValidation extends AuthState {
+  const AuthLoginFailedValidation({
+    required this.email,
+    required this.password,
+  });
+
+  final String? email;
+  final String? password;
+}
