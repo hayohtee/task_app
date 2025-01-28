@@ -14,6 +14,28 @@ class SignUpFailedValidationError extends RemoteResponse {
   final String? name;
   final String? email;
   final String? password;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory SignUpFailedValidationError.fromMap(Map<String, dynamic> map) {
+    return SignUpFailedValidationError(
+      name: map['error']['name'] != null ? map['error']['name'] as String : null,
+      email: map['error']['email'] != null ? map['error']['email'] as String : null,
+      password: map['error']['password'] != null ? map['error']['password'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SignUpFailedValidationError.fromJson(String source) {
+    return SignUpFailedValidationError.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
 }
 
 class UserCreated extends RemoteResponse {
