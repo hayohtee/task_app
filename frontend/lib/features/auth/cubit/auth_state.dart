@@ -42,3 +42,15 @@ final class AuthLoginFailedValidation extends AuthState {
   final String? email;
   final String? password;
 }
+
+final class AuthEmailNotFound extends AuthState {
+  const AuthEmailNotFound(this.message);
+
+  final String message;
+}
+
+final class AuthInvalidCredentials extends AuthState {
+  const AuthInvalidCredentials(this.message);
+
+  final String message;
+}
