@@ -63,6 +63,16 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
 
+      if (response is EmailNotFound) {
+        emit(AuthEmailNotFound(response.message));
+        return;
+      }
+
+      if (response is InvalidCredentials) {
+        emit(AuthInvalidCredentials(response.message));
+        return;
+      }
+
       if (response is Error) {
         emit(AuthError(response.error));
       }
