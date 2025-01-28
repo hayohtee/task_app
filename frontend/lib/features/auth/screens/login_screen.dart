@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _emailError;
   String? _passwordError;
   bool _obscureText = true;
+  String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: 32),
+                        if (errorText != null)
+                          Text(
+                            errorText!,
+                            style: TextStyle(color: Colors.redAccent),
+                          ),
                         (state is AuthLoading)
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
