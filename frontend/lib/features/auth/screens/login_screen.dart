@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _emailError;
   String? _passwordError;
   bool _obscureText = true;
-  String? _errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +35,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     _emailError = state.email;
                     _passwordError = state.password;
                   });
+                  break;
                 case AuthSuccess():
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("${state.user.name} logged in successfully"),
                     ),
                   );
+                  break;
                 case AuthEmailNotFound():
                   setState(() {
                     _emailError = state.message;
                   });
+                  break;
                 case AuthInvalidCredentials():
                   setState(() {
                     _emailError = "";
-                    _passwordError = "";
-                    _errorText = state.message;
+                    _passwordError = state.message;
                   });
-                default:
+                  break;
+
+                case AuthError():
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("An error occurred when logging in"),
+                      content: Text(state.error),
                     ),
                   );
+                  break;
+                default:
               }
             },
             builder: (context, state) {
@@ -106,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: InputDecoration(
                             hintText: "Password",
                             errorText: _passwordError,
+                            errorMaxLines: 2,
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -132,11 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: 32),
-                        if (_errorText != null)
-                          Text(
-                            _errorText!,
-                            style: TextStyle(color: Colors.redAccent),
-                          ),
                         (state is AuthLoading)
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
