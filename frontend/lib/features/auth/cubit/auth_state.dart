@@ -14,7 +14,12 @@ final class AuthError extends AuthState {
   final String error;
 }
 
-final class AuthSuccess extends AuthState {}
+final class AuthSuccess extends AuthState {
+  const AuthSuccess({required this.user, required this.tokens});
+
+  final TokenModel tokens;
+  final UserModel user;
+}
 
 final class AuthSignUpFailedValidation extends AuthState {
   const AuthSignUpFailedValidation({
@@ -26,4 +31,26 @@ final class AuthSignUpFailedValidation extends AuthState {
   final String? name;
   final String? email;
   final String? password;
+}
+
+final class AuthLoginFailedValidation extends AuthState {
+  const AuthLoginFailedValidation({
+    required this.email,
+    required this.password,
+  });
+
+  final String? email;
+  final String? password;
+}
+
+final class AuthEmailNotFound extends AuthState {
+  const AuthEmailNotFound(this.message);
+
+  final String message;
+}
+
+final class AuthInvalidCredentials extends AuthState {
+  const AuthInvalidCredentials(this.message);
+
+  final String message;
 }

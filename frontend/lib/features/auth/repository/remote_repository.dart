@@ -20,16 +20,16 @@ class RemoteRepository {
       final response = await http.post(
         Uri.parse("${Constants.apiURI}/auth/register"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": name,
-          "email": email,
-          "password": password,
-        }),
+        body: SignUpRequest(
+          name: name,
+          email: email,
+          password: password,
+        ).toJson(),
       );
 
       switch (response.statusCode) {
         case 201:
-          return UserCreated.fromJson(response.body);
+          return Success.fromJson(response.body);
         case 422:
           return SignUpFailedValidationError.fromJson(response.body);
         default:
@@ -41,8 +41,32 @@ class RemoteRepository {
     }
   }
 
-  Future<void> login({
+  Future<RemoteResponse> login({
     required String email,
     required String password,
-  }) async {}
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse("${Constants.apiURI}/auth/login"),
+        headers: {"Content-Type": "application/json"},
+        body: LoginRequest(email: email, password: password).toJson(),
+      );
+
+      switch (response.statusCode) {
+        case 200:
+          return Success.fromJson(response.body);
+        case 422:
+          return LoginFailedValidationError.fromJson(response.body);
+        case 404:
+          return EmailNotFound.fromJson(response.body);
+        case 401:
+          return InvalidCredentials.fromJson(response.body);
+        default:
+          return Error.fromJson(response.body);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return Error(error: e.toString());
+    }
+  }
 }

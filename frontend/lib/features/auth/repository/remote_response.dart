@@ -1,20 +1,33 @@
 part of "remote_repository.dart";
 
-sealed class RemoteResponse {}
+sealed class RemoteResponse {
+  const RemoteResponse();
+}
 
 class SignUpFailedValidationError extends RemoteResponse {
-  SignUpFailedValidationError({required this.error});
-  final SignUpValidationMessage error;
+  const SignUpFailedValidationError({
+    required this.email,
+    required this.name,
+    required this.password,
+  });
+
+  final String? name;
+  final String? email;
+  final String? password;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'error': error.toMap(),
+      'name': name,
+      'email': email,
+      'password': password,
     };
   }
 
   factory SignUpFailedValidationError.fromMap(Map<String, dynamic> map) {
     return SignUpFailedValidationError(
-      error: SignUpValidationMessage.fromMap(map['error'] as Map<String, dynamic>),
+      name: map['error']['name'] != null ? map['error']['name'] as String : null,
+      email: map['error']['email'] != null ? map['error']['email'] as String : null,
+      password: map['error']['password'] != null ? map['error']['password'] as String : null,
     );
   }
 
@@ -25,8 +38,38 @@ class SignUpFailedValidationError extends RemoteResponse {
   }
 }
 
-class UserCreated extends RemoteResponse {
-  UserCreated({required this.tokens, required this.user});
+class LoginFailedValidationError extends RemoteResponse {
+  const LoginFailedValidationError({
+    required this.email,
+    required this.password,
+  });
+
+  final String? email;
+  final String? password;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory LoginFailedValidationError.fromMap(Map<String, dynamic> map) {
+    return LoginFailedValidationError(
+      email: map['error']['email'] != null ? map['error']['email'] as String : null,
+      password: map['error']['password'] != null ? map['error']['password'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory LoginFailedValidationError.fromJson(String source) {
+    return LoginFailedValidationError.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
+
+class Success extends RemoteResponse {
+  Success({required this.tokens, required this.user});
 
   final TokenModel tokens;
   final UserModel user;
@@ -38,8 +81,8 @@ class UserCreated extends RemoteResponse {
     };
   }
 
-  factory UserCreated.fromMap(Map<String, dynamic> map) {
-    return UserCreated(
+  factory Success.fromMap(Map<String, dynamic> map) {
+    return Success(
       tokens: TokenModel.fromMap(map['tokens'] as Map<String, dynamic>),
       user: UserModel.fromMap(map['user'] as Map<String, dynamic>),
     );
@@ -47,8 +90,8 @@ class UserCreated extends RemoteResponse {
 
   String toJson() => json.encode(toMap());
 
-  factory UserCreated.fromJson(String source) {
-    return UserCreated.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Success.fromJson(String source) {
+    return Success.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
 
@@ -76,36 +119,34 @@ class Error extends RemoteResponse {
   }
 }
 
-class SignUpValidationMessage {
-  const SignUpValidationMessage({
-    required this.name,
-    required this.email,
-    required this.password,
-  });
+class EmailNotFound extends RemoteResponse {
+  const EmailNotFound({required this.message});
 
-  final String? name;
-  final String? email;
-  final String? password;
+  final String message;
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': name,
-      'email': email,
-      'password': password,
-    };
-  }
-
-  factory SignUpValidationMessage.fromMap(Map<String, dynamic> map) {
-    return SignUpValidationMessage(
-      name: map['name'] != null ? map['name'] as String : null,
-      email: map['email'] != null ? map['email'] as String : null,
-      password: map['password'] != null ? map['password'] as String : null,
+  factory EmailNotFound.fromMap(Map<String, dynamic> map) {
+    return EmailNotFound(
+      message: map['error']['message'] as String,
     );
   }
 
-  String toJson() => json.encode(toMap());
+  factory EmailNotFound.fromJson(String source) {
+    return EmailNotFound.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
 
-  factory SignUpValidationMessage.fromJson(String source) {
-    return SignUpValidationMessage.fromMap(json.decode(source) as Map<String, dynamic>);
+class InvalidCredentials extends RemoteResponse {
+  const InvalidCredentials({required this.message});
+
+  final String message;
+
+  factory InvalidCredentials.fromMap(Map<String, dynamic> map) {
+    return InvalidCredentials(
+      message: map['error']['message'] as String,
+    );
+  }
+
+  factory InvalidCredentials.fromJson(String source) {
+    return InvalidCredentials.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }

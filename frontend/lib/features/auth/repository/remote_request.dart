@@ -33,3 +33,33 @@ class SignUpRequest {
     return SignUpRequest.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
+
+class LoginRequest {
+  const LoginRequest({
+    required this.email,
+    required this.password,
+  });
+
+  final String email;
+  final String password;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory LoginRequest.fromMap(Map<String, dynamic> map) {
+    return LoginRequest(
+      email: map['email'] as String,
+      password: map['password'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory LoginRequest.fromJson(String source) {
+    return LoginRequest.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
