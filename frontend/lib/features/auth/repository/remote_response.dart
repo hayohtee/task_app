@@ -134,3 +134,19 @@ class EmailNotFound extends RemoteResponse {
     return EmailNotFound.fromMap(json.decode(source) as Map<String, dynamic>);
   }
 }
+
+class InvalidCredentials extends RemoteResponse {
+  const InvalidCredentials({required this.message});
+
+  final String message;
+
+  factory InvalidCredentials.fromMap(Map<String, dynamic> map) {
+    return InvalidCredentials(
+      message: map['error']['message'] as String,
+    );
+  }
+
+  factory InvalidCredentials.fromJson(String source) {
+    return InvalidCredentials.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
