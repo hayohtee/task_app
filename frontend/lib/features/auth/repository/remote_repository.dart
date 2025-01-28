@@ -20,11 +20,11 @@ class RemoteRepository {
       final response = await http.post(
         Uri.parse("${Constants.apiURI}/auth/register"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": name,
-          "email": email,
-          "password": password,
-        }),
+        body: SignUpRequest(
+          name: name,
+          email: email,
+          password: password,
+        ).toJson(),
       );
 
       switch (response.statusCode) {
