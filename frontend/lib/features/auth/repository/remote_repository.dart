@@ -57,6 +57,10 @@ class RemoteRepository {
           return Success.fromJson(response.body);
         case 422:
           return LoginFailedValidationError.fromJson(response.body);
+        case 404:
+          return EmailNotFound.fromJson(response.body);
+        case 401:
+          return InvalidCredentials.fromJson(response.body);
         default:
           return Error.fromJson(response.body);
       }
