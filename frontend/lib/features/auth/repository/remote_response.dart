@@ -126,7 +126,7 @@ class EmailNotFound extends RemoteResponse {
 
   factory EmailNotFound.fromMap(Map<String, dynamic> map) {
     return EmailNotFound(
-      message: map['error']['message'] as String,
+      message: map['error'] as String,
     );
   }
 
@@ -142,7 +142,7 @@ class InvalidCredentials extends RemoteResponse {
 
   factory InvalidCredentials.fromMap(Map<String, dynamic> map) {
     return InvalidCredentials(
-      message: map['error']['message'] as String,
+      message: map['error'] as String,
     );
   }
 

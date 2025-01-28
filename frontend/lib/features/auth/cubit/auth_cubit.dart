@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/repository/remote_repository.dart';
 import 'package:frontend/models/token_model.dart';
@@ -77,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthError(response.error));
       }
     } catch (e) {
+      debugPrint("Auth cubit ${e.toString()}");
       emit(AuthError(e.toString()));
     }
   }
