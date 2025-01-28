@@ -38,6 +38,36 @@ class SignUpFailedValidationError extends RemoteResponse {
   }
 }
 
+class LoginFailedValidationError extends RemoteResponse {
+  const LoginFailedValidationError({
+    required this.email,
+    required this.password,
+  });
+
+  final String? email;
+  final String? password;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory LoginFailedValidationError.fromMap(Map<String, dynamic> map) {
+    return LoginFailedValidationError(
+      email: map['error']['email'] != null ? map['error']['email'] as String : null,
+      password: map['error']['password'] != null ? map['error']['password'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory LoginFailedValidationError.fromJson(String source) {
+    return LoginFailedValidationError.fromMap(json.decode(source) as Map<String, dynamic>);
+  }
+}
+
 class UserCreated extends RemoteResponse {
   UserCreated({required this.tokens, required this.user});
 
