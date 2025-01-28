@@ -36,7 +36,7 @@ class RemoteRepository {
           return Error.fromJson(response.body);
       }
     } catch (e) {
-      debugPrint("Remote response ${e.toString()}");
+      debugPrint(e.toString());
       return Error(error: e.toString());
     }
   }
