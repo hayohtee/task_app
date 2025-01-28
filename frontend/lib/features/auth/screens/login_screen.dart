@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _emailError;
   String? _passwordError;
   bool _obscureText = true;
-  String? errorText;
+  String? _errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +30,34 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(16.0),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-              if (state is AuthLoginFailedValidation) {
-                setState(() {
-                  _emailError = state.email;
-                  _passwordError = state.password;
-                });
-              } else if (state is AuthSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("${state.user.name} logged in successfully"),
-                  ),
-                );
+              switch (state) {
+                case AuthLoginFailedValidation():
+                  setState(() {
+                    _emailError = state.email;
+                    _passwordError = state.password;
+                  });
+                case AuthSuccess():
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("${state.user.name} logged in successfully"),
+                    ),
+                  );
+                case AuthEmailNotFound():
+                  setState(() {
+                    _emailError = state.message;
+                  });
+                case AuthInvalidCredentials():
+                  setState(() {
+                    _emailError = "";
+                    _passwordError = "";
+                    _errorText = state.message;
+                  });
+                default:
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("An error occurred when logging in"),
+                    ),
+                  );
               }
             },
             builder: (context, state) {
@@ -115,9 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: 32),
-                        if (errorText != null)
+                        if (_errorText != null)
                           Text(
-                            errorText!,
+                            _errorText!,
                             style: TextStyle(color: Colors.redAccent),
                           ),
                         (state is AuthLoading)
