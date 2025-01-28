@@ -14,6 +14,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  String? _emailError;
+  String? _passwordError;
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
