@@ -23,19 +23,22 @@ class AuthCubit extends Cubit<AuthState> {
         name: name,
       );
 
-      switch (response) {
-        case Success():
-          emit(AuthSuccess(tokens: response.tokens, user: response.user));
-        case Error():
-          emit(AuthError(response.error));
-        case SignUpFailedValidationError():
-          emit(AuthSignUpFailedValidation(
-            name: response.name,
-            email: response.email,
-            password: response.password,
-          ));
-        default:
-          throw response;
+      if (response is Success) {
+        emit(AuthSuccess(tokens: response.tokens, user: response.user));
+        return;
+      }
+
+      if (response is SignUpFailedValidationError) {
+        emit(AuthSignUpFailedValidation(
+          name: response.name,
+          email: response.email,
+          password: response.password,
+        ));
+        return;
+      }
+
+      if (response is Error) {
+        emit(AuthError(response.error));
       }
     } catch (e) {
       emit(AuthError(e.toString()));
