@@ -170,7 +170,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void loginUser() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthCubit>().login(
+            _emailController.text.trim(),
+            _passwordController.text.trim(),
+          );
+    }
   }
 
   @override
