@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/repository/remote_repository.dart';
 import 'package:frontend/models/token_model.dart';
@@ -16,70 +15,43 @@ class AuthCubit extends Cubit<AuthState> {
     required String email,
     required String password,
   }) async {
-    try {
-      emit(AuthLoading());
-      final response = await remoteRepository.signUp(
-        email: email,
-        password: password,
-        name: name,
-      );
-
-      if (response is Success) {
-        emit(AuthSuccess(tokens: response.tokens, user: response.user));
-        return;
-      }
-
-      if (response is SignUpFailedValidationError) {
+    emit(AuthLoading());
+    final response = await remoteRepository.login(email: email, password: password);
+    switch (response) {
+      case Success():
+        emit(AuthSuccess(user: response.user, tokens: response.tokens));
+        break;
+      case SignUpFailedValidationError():
         emit(AuthSignUpFailedValidation(
           name: response.name,
           email: response.email,
           password: response.password,
         ));
-        return;
-      }
-
-      if (response is Error) {
+        break;
+      case Error():
         emit(AuthError(response.error));
-      }
-    } catch (e) {
-      emit(AuthError(e.toString()));
+        break;
     }
   }
 
   void login(String email, String password) async {
-    try {
-      emit(AuthLoading());
-      final response = await remoteRepository.login(email: email, password: password);
+    emit(AuthLoading());
 
-      if (response is Success) {
+    final response = await remoteRepository.login(email: email, password: password);
+
+    switch (response) {
+      case Success():
         emit(AuthSuccess(user: response.user, tokens: response.tokens));
-        return;
-      }
-
-      if (response is LoginFailedValidationError) {
-        emit(AuthLoginFailedValidation(
-          email: response.email,
-          password: response.password,
-        ));
-        return;
-      }
-
-      if (response is EmailNotFound) {
+        break;
+      case EmailNotFound():
         emit(AuthEmailNotFound(response.message));
-        return;
-      }
-
-      if (response is InvalidCredentials) {
+        break;
+      case InvalidCredentials():
         emit(AuthInvalidCredentials(response.message));
-        return;
-      }
-
-      if (response is Error) {
+        break;
+      case Error():
         emit(AuthError(response.error));
-      }
-    } catch (e) {
-      debugPrint("Auth cubit ${e.toString()}");
-      emit(AuthError(e.toString()));
+        break;
     }
   }
 }
