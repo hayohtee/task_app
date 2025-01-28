@@ -14,7 +14,12 @@ final class AuthError extends AuthState {
   final String error;
 }
 
-final class AuthSuccess extends AuthState {}
+final class AuthSuccess extends AuthState {
+  const AuthSuccess({required this.user, required this.tokens});
+
+  final TokenModel tokens;
+  final UserModel user;
+}
 
 final class AuthSignUpFailedValidation extends AuthState {
   const AuthSignUpFailedValidation({
