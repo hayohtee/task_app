@@ -28,9 +28,9 @@ class AuthCubit extends Cubit<AuthState> {
           emit(AuthError(response.error));
         case SignUpFailedValidationError():
           emit(AuthSignUpFailedValidation(
-            name: response.error.name,
-            email: response.error.email,
-            password: response.error.password,
+            name: response.name,
+            email: response.email,
+            password: response.password,
           ));
       }
     } catch (e) {
