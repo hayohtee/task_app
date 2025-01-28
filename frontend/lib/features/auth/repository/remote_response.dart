@@ -1,6 +1,6 @@
 part of "remote_repository.dart";
 
-sealed class RemoteResponse {
+abstract class RemoteResponse {
   const RemoteResponse();
 }
 
