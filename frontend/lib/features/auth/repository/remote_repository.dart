@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/core/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:frontend/core/constants/constants.dart';
@@ -11,6 +12,8 @@ part 'remote_response.dart';
 part 'remote_request.dart';
 
 class RemoteRepository {
+  final sharedPreferences = SharedPreferencesService();
+
   Future<RemoteResponse> signUp({
     required String name,
     required String email,
@@ -29,7 +32,14 @@ class RemoteRepository {
 
       switch (response.statusCode) {
         case 201:
-          return Success.fromJson(response.body);
+          final success = Success.fromJson(response.body);
+          if (success.tokens.accessToken.isNotEmpty) {
+            sharedPreferences.setAccessToken(success.tokens.accessToken);
+          }
+          if (success.tokens.refreshToken.isNotEmpty) {
+            sharedPreferences.setRefreshToken(success.tokens.refreshToken);
+          }
+          return success;
         case 422:
           return SignUpFailedValidationError.fromJson(response.body);
         default:
@@ -54,7 +64,14 @@ class RemoteRepository {
 
       switch (response.statusCode) {
         case 200:
-          return Success.fromJson(response.body);
+          final success = Success.fromJson(response.body);
+          if (success.tokens.accessToken.isNotEmpty) {
+            sharedPreferences.setAccessToken(success.tokens.accessToken);
+          }
+          if (success.tokens.refreshToken.isNotEmpty) {
+            sharedPreferences.setRefreshToken(success.tokens.refreshToken);
+          }
+          return success;
         case 422:
           return LoginFailedValidationError.fromJson(response.body);
         case 404:
