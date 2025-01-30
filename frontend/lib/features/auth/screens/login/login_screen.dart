@@ -5,6 +5,8 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/screens/signup_screen.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+import 'cubit/login_cubit.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -27,35 +29,35 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BlocConsumer<AuthCubit, AuthState>(
+          child: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
               switch (state) {
-                case AuthLoginFailedValidation():
+                case LoginValidationError():
                   setState(() {
                     _emailError = state.email;
                     _passwordError = state.password;
                   });
                   break;
-                case AuthSuccess():
+                case LoginSuccess():
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("${state.user.name} logged in successfully"),
                     ),
                   );
                   break;
-                case AuthEmailNotFound():
+                case LoginEmailNotFoundError():
                   setState(() {
-                    _emailError = state.message;
+                    _emailError = state.error;
                   });
                   break;
-                case AuthInvalidCredentials():
+                case LoginInvalidCredentialsError():
                   setState(() {
                     _emailError = "";
-                    _passwordError = state.message;
+                    _passwordError = state.error;
                   });
                   break;
 
-                case AuthError():
+                case LoginError():
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(state.error),
@@ -195,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginUser() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().login(
+      context.read<LoginCubit>().login(
             _emailController.text.trim(),
             _passwordController.text.trim(),
           );
