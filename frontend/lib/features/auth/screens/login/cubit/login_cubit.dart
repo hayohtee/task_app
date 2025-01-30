@@ -18,8 +18,12 @@ class LoginCubit extends Cubit<LoginState> {
     final response = await repository.login(email: email, password: password);
     switch (response) {
       case Success():
-        sharedPreferences.setAccessToken(response.tokens.accessToken);
-        sharedPreferences.setRefreshToken(response.tokens.refreshToken);
+        if (response.tokens.accessToken.isNotEmpty) {
+          sharedPreferences.setAccessToken(response.tokens.accessToken);
+        }
+        if (response.tokens.refreshToken.isNotEmpty) {
+          sharedPreferences.setRefreshToken(response.tokens.refreshToken);
+        }
         emit(LoginSuccess(response.user));
         break;
       case LoginFailedValidationError():
