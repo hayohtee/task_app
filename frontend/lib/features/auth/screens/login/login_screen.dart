@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/screens/signup/signup_screen.dart';
+import 'package:frontend/features/home/screens/home_screen.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import 'cubit/login_cubit.dart';
@@ -38,9 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                   break;
                 case LoginSuccess():
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("${state.user.name} logged in successfully"),
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
                     ),
                   );
                   break;
