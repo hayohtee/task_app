@@ -1,8 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/auth/screens/signup_screen.dart';
+import 'package:frontend/features/auth/screens/signup/signup_screen.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import 'cubit/login_cubit.dart';
@@ -140,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: 32),
-                        (state is AuthLoading)
+                        (state is LoginLoading)
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: SizedBox(
