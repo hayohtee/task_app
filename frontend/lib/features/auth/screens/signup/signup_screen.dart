@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/screens/login/login_screen.dart';
+import 'package:frontend/features/home/screens/home_screen.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import 'cubit/sign_up_cubit.dart';
@@ -34,9 +35,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             listener: (context, state) {
               switch (state) {
                 case SignUpSuccess():
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Account created! Login Now!"),
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
                     ),
                   );
                   break;
