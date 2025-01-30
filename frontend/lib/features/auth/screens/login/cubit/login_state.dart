@@ -32,9 +32,8 @@ final class LoginEmailNotFoundError extends LoginState {
 }
 
 final class LoginSuccess extends LoginState {
-  const LoginSuccess({required this.tokens, required this.user});
+  const LoginSuccess(this.user);
 
-  final TokenModel tokens;
   final UserModel user;
 }
 
