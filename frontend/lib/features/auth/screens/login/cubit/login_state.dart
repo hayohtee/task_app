@@ -7,14 +7,16 @@ sealed class LoginState {
 
 final class LoginInitial extends LoginState {}
 
+final class LoginLoading extends LoginState {}
+
 final class LoginError extends LoginState {
   const LoginError(this.error);
 
   final String error;
 }
 
-final class LoginFailedValidationError extends LoginState {
-  const LoginFailedValidationError({
+final class LoginValidationError extends LoginState {
+  const LoginValidationError({
     required this.email,
     required this.password,
   });
@@ -34,4 +36,10 @@ final class LoginSuccess extends LoginState {
 
   final TokenModel tokens;
   final UserModel user;
+}
+
+final class LoginInvalidCredentialsError extends LoginState {
+  const LoginInvalidCredentialsError(this.error);
+
+  final String error;
 }
