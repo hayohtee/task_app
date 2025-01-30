@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/auth/screens/login_screen.dart';
+import 'package:frontend/features/auth/screens/login/login_screen.dart';
+
+import 'features/auth/screens/login/cubit/login_cubit.dart';
+import 'features/auth/screens/signup/cubit/sign_up_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => AuthCubit())
+        BlocProvider(create: (_) => SignUpCubit()),
+        BlocProvider(create: (_) => LoginCubit()),
       ],
       child: MaterialApp(
         title: 'Task App',
