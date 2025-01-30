@@ -2,8 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/auth/screens/login_screen.dart';
+import 'package:frontend/features/auth/screens/login/login_screen.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+
+import 'cubit/sign_up_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -29,26 +31,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BlocConsumer<AuthCubit, AuthState>(
+          child: BlocConsumer<SignUpCubit, SignUpState>(
             listener: (context, state) {
-              if (state is AuthSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Account created! Login Now!"),
-                  ),
-                );
-              } else if (state is AuthSignUpFailedValidation) {
-                setState(() {
-                  _emailError = state.email;
-                  _passwordError = state.password;
-                  _nameError = state.name;
-                });
-              } else if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.error),
-                  ),
-                );
+              switch (state) {
+                case SignUpSuccess():
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Account created! Login Now!"),
+                    ),
+                  );
+                  break;
+                case SignUpValidationError():
+                  setState(() {
+                    _emailError = state.email;
+                    _passwordError = state.password;
+                    _nameError = state.name;
+                  });
+                  break;
+                case SignUpError():
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.error),
+                    ),
+                  );
+                  break;
+                default:
               }
             },
             builder: (context, state) {
@@ -197,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void signUpUser() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().signUp(
+      context.read<SignUpCubit>().signUp(
             name: _nameController.text.trim(),
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
